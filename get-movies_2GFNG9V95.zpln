@@ -1,0 +1,975 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n\n# Top rated movies by genres\n\nThe script allows user to get a list of movies sorted by rating and filtered by conditions that entered was entered.\n\n### Requirements\n\n* Ubuntu 18.04 LTS\n* Hadoop 3.2\n* Spark 3.1\n\n### Usage\n\nUser can set parameters for search to field that have title `Set params for search`, and run all fields below.",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h1>Top rated movies by genres</h1>\n<p>The script allows user to get a list of movies sorted by rating and filtered by conditions that entered was entered.</p>\n<h3>Requirements</h3>\n<ul>\n<li>Ubuntu 18.04 LTS</li>\n<li>Hadoop 3.2</li>\n<li>Spark 3.1</li>\n</ul>\n<h3>Usage</h3>\n<p>User can set parameters for search to field that have title <code>Set params for search</code>, and run all fields below.</p>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630788785895_1958689856",
+      "id": "paragraph_1630788785895_1958689856",
+      "dateCreated": "2021-09-04T23:53:05+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:334"
+    },
+    {
+      "title": "Download data",
+      "text": "%sh\n\nURL_MOVIES=https://files.grouplens.org/datasets/movielens/ml-latest-small.zip\n\nCRC_SMALL_MOVIES=196934728\nCRC_SMALL_RATINGS=1116851198\n\nmkdir -p tmp\n\nremoveTmpArchives () {\n    if [ -d \"$(pwd)/tmp/data_temp\" ]; then\n        rm -rf \"$(pwd)/tmp/data_temp\"\n    fi\n    if [ -f \"$(pwd)/tmp/data.zip\" ]; then\n\t    rm \"$(pwd)/tmp/data.zip\"\n\tfi\n}\n\ndownloadData () {\n    if [ ! -f \"$(pwd)/tmp/data.zip\" ]; then\n        curl -s $URL_MOVIES -o \"$(pwd)/tmp/data.zip\"\n    fi\n}\n\nputDataToTmp () {\n    unzip -o \"$(pwd)/tmp/data.zip\" ml-latest-small/$1 -d \"$(pwd)/tmp/data_temp\"> /dev/null\n\tmv \"$(pwd)/tmp/data_temp/ml-latest-small/$1\" \"$(pwd)/tmp\"\n}\n\ngetCrcFile () {\n\toutput=($(cksum $(pwd)/tmp/$1))\n    echo $output\n}\n\ncheckDownloadSingleFile () {\n    if [ -f \"$(pwd)/tmp/$1\" ]; then\n    \tif [ \"$(getCrcFile $1)\" != \"$2\" ]; then\n    \t\trm \"$(pwd)/tmp/$1\"\n    \t\tdownloadData\n    \t\tputDataToTmp $1\n    \tfi\n    else\n        downloadData\n        putDataToTmp $1\n    fi\n}\n\ncheckDownloadSingleFile movies.csv $CRC_SMALL_MOVIES\ncheckDownloadSingleFile ratings.csv $CRC_SMALL_RATINGS\nremoveTmpArchives",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "completionKey": "TAB",
+          "editOnDblClick": false,
+          "completionSupport": false,
+          "language": "sh"
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630610645198_776392875",
+      "id": "paragraph_1630455391336_2129258702",
+      "dateCreated": "2021-09-02T22:24:05+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:335"
+    },
+    {
+      "text": "%md\n\n### If you are using hdfs, then you must put data\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>If you are using hdfs, then you must put data</h3>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630794664030_611572973",
+      "id": "paragraph_1630794664030_611572973",
+      "dateCreated": "2021-09-05T01:31:04+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:336"
+    },
+    {
+      "title": "Put data to hdfs",
+      "text": "%sh\n\nCRC_SMALL_MOVIES=/tmp/data_movies.csvMD5-of-0MD5-of-512CRC32C00000200000000000000000088e2715a10f62d103571520b0188a3a0\nCRC_SMALL_RATINGS=/tmp/data_ratings.csvMD5-of-0MD5-of-512CRC32C0000020000000000000000003367a3fa909f630b76314f1a86613800\n\nputDataToHDFS () {\n\thdfs dfs -put $(pwd)/tmp/$1 /tmp/$2 > /dev/null\n}\n\ncheckIfFileExists () {\n\thdfs dfs -test -e /tmp/$1 && echo $?\n}\n\ngetCrcData () {\n\thdfs dfs -checksum /tmp/$1 | tr -d '[:space:]'\n}\n\nremoveDataFromHDFS () {\n\thdfs dfs -rm /tmp/$1 > /dev/null\n}\n\nputData () {\n    if [ \"$(checkIfFileExists $1)\" = \"0\" ]; then\n        if [ \"$(getCrcData $1)\" != \"$3\" ]; then\n            hdfs dfs -rm /tmp/$1\n            putDataToHDFS $2 $1\n        fi\n    else\n        putDataToHDFS $2 $1\n    fi\n}\n\nputData data_movies.csv movies.csv $CRC_SMALL_MOVIES\nputData data_ratings.csv ratings.csv $CRC_SMALL_RATINGS\n\nrm -r $(pwd)/tmp/*",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630715192147_2045954425",
+      "id": "paragraph_1630715192147_2045954425",
+      "dateCreated": "2021-09-04T03:26:32+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:337"
+    },
+    {
+      "text": "%md\n\n### Load data to RDD\n\nIf you use local files, you need to run `Load data from local folder` paragraph. If you need to load data from hdfs - run `Load data from hdfs` paragraph.\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Load data to RDD</h3>\n<p>If you use local files, you need to run <code>Load data from local folder</code> paragraph. If you need to load data from hdfs - run <code>Load data from hdfs</code> paragraph.</p>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630795435748_946441182",
+      "id": "paragraph_1630795435748_946441182",
+      "dateCreated": "2021-09-05T01:43:55+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:338"
+    },
+    {
+      "title": "load data from hdfs",
+      "text": "%pyspark\n\nmovies = sc.textFile(\"hdfs:///tmp/data_movies.csv\")\nratings = sc.textFile(\"hdfs:///tmp/data_ratings.csv\")",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "results": {},
+        "enabled": false,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630612011000_1969952756",
+      "id": "paragraph_1630612011000_1969952756",
+      "dateCreated": "2021-09-02T22:46:51+0300",
+      "dateStarted": "2021-09-04T01:43:32+0300",
+      "dateFinished": "2021-09-04T01:43:32+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:339"
+    },
+    {
+      "title": "Load data from local folder",
+      "text": "%pyspark\n\nimport os\n\npathToNotebook = os.getcwd()\n\nmovies = sc.textFile(\"file://\" + pathToNotebook + \"/tmp/movies.csv\")\nratings = sc.textFile(\"file://\" + pathToNotebook + \"/tmp/ratings.csv\")",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "results": {},
+        "enabled": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630612116434_2133689770",
+      "id": "paragraph_1630612116434_2133689770",
+      "dateCreated": "2021-09-02T22:48:36+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:340"
+    },
+    {
+      "text": "%md\n\n### Parameters for search\n\n* `N`: `int` - number of selectable films;\n* `regex`: `str` - regular expression for search films by name;\n* `yearFrom`: `int` - the oldest year release of selected films;\n* `yearTo`: `int` - the latest year release of selected films;\n* `genres`: `str` - select films by genres. String might be in format `<genre_1|genre_2|...|genre_n>`\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Parameters for search</h3>\n<ul>\n<li><code>N</code>: <code>int</code> - number of selectable films;</li>\n<li><code>regex</code>: <code>str</code> - regular expression for search films by name;</li>\n<li><code>yearFrom</code>: <code>int</code> - the oldest year release of selected films;</li>\n<li><code>yearTo</code>: <code>int</code> - the latest year release of selected films;</li>\n<li><code>genres</code>: <code>str</code> - select films by genres. String might be in format <code>&lt;genre_1|genre_2|...|genre_n&gt;</code></li>\n</ul>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630796088536_1574403850",
+      "id": "paragraph_1630796088536_1574403850",
+      "dateCreated": "2021-09-05T01:54:48+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:341"
+    },
+    {
+      "title": "Set params for search",
+      "text": "%pyspark\n\nregex = 'war'\nyearFrom = 1990\nyearTo = None\ngenres = None\nN = 10\n\nif genres:\n    genres = genres.split('|')\n\nconditions = [\n    regex, \n    yearFrom, \n    yearTo, \n    genres,\n    N\n]",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "completionKey": "TAB",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "language": "python"
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630610645198_169833008",
+      "id": "paragraph_1630457022953_372018724",
+      "dateCreated": "2021-09-02T22:24:05+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:342"
+    },
+    {
+      "title": "Import regular expressions library",
+      "text": "%pyspark\n\nimport re",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630797747138_656437057",
+      "id": "paragraph_1630797747138_656437057",
+      "dateCreated": "2021-09-05T02:22:27+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:343"
+    },
+    {
+      "text": "%md\n\n### Functions for normalize data\n\n* `normalizeMovies` - normalize movies RDD (parse string with movieId, title, year, genres). Input args: `row` - row with movies string. Returns `list` [int(movieId), [year, title, genres]].\n* `normalizeRatings` - normalize ratings RDD (parse string with movieId, rating). Input args: `row` - row with ratings string. Returns `list` [int(movieId), float(rating)].\n* `normalizeMoviesList` - normalize movies in single genre partition. Sort data and get N rows. Input args: `row` - list with movies. Returns `list` with sorted movies.\n* `__setSortMoviesRules` - private function, that are used in `normalizeMoviesList` for setting rules of sorting. Input args `list` with movies parameters (year, title, rating). Returns `list`.",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Functions for normalize data</h3>\n<ul>\n<li><code>normalizeMovies</code> - normalize movies RDD (parse string with movieId, title, year, genres). Input args: <code>row</code> - row with movies string. Returns <code>list</code> [int(movieId), [year, title, genres]].</li>\n<li><code>normalizeRatings</code> - normalize ratings RDD (parse string with movieId, rating). Input args: <code>row</code> - row with ratings string. Returns <code>list</code> [int(movieId), float(rating)].</li>\n<li><code>normalizeMoviesList</code> - normalize movies in single genre partition. Sort data and get N rows. Input args: <code>row</code> - list with movies. Returns <code>list</code> with sorted movies.</li>\n<li><code>__setSortMoviesRules</code> - private function, that are used in <code>normalizeMoviesList</code> for setting rules of sorting. Input args <code>list</code> with movies parameters (year, title, rating). Returns <code>list</code>.</li>\n</ul>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630788525610_513572064",
+      "id": "paragraph_1630788525610_513572064",
+      "dateCreated": "2021-09-04T23:48:45+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:344"
+    },
+    {
+      "text": "%pyspark\n\ndef normalizeMovies(row):\n    \n    try:\n        movieId, title, year, genres = re.split('(\\d+),\\\"?(.+)\\((\\d{4})\\)[ ]*\\\"?,(.+)', row)[1:5]\n        \n        if genres == '(no genres listed)':\n            raise ValueError(\"Bad movie\")\n        \n        title = title.strip()\n        year = None if len(year) < 2 else int(year)\n        genres = genres.split(\"|\")\n        \n        return [int(movieId), [year, title, genres]]\n    except:\n        return [None, [None, None, None]]\n\n\ndef normalizeRatings(row):\n\n    try:\n        movieId, rating = row.split(',')[1:3]\n        return [int(movieId), float(rating)]\n    except:\n        return [None, None]\n        \n\ndef __setSortMoviesRules(movie):\n    \n    year, title, rating = movie\n    return [-rating, -year, title]\n        \n\ndef normalizeMoviesList(row):\n\n    N = conditions[4]\n    sortedMovies = sorted(row, key=lambda movie: __setSortMoviesRules(movie))\n    if N:\n        return sortedMovies[:N]\n    else:\n        return sortedMovies\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:24+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630797554367_441572184",
+      "id": "paragraph_1630797554367_441572184",
+      "dateCreated": "2021-09-05T02:19:14+0300",
+      "dateStarted": "2021-09-05T21:18:24+0300",
+      "dateFinished": "2021-09-05T21:18:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:345"
+    },
+    {
+      "text": "%md\n\n### Functions for filtering data\n\nFunctions `checkWithSearchParametersFilms` and `checkNullRow` are used for filtering data. Function `__checkGenres` - private function that used for check genres inside `checkWithSearchParametersFilms`.\n\n* `__checkGenres` - check contains seraching genre in movie genres. Input args: `searchGenres` - dict with searching genres, `columnGenres` - list genres of movies. Returns `bool`.\n* `checkWithSearchParametersFilms` - check if the given search parameters for movies are met. Input args: `row` - list with pair key, values. Returns `bool`.\n* `checkNullRow` - check if row is None. Input args: `row` - list with pair key, values. Returns `bool`.\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:25+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Functions for filtering data</h3>\n<p>Functions <code>checkWithSearchParametersFilms</code> and <code>checkNullRow</code> are used for filtering data. Function <code>__checkGenres</code> - private function that used for check genres inside <code>checkWithSearchParametersFilms</code>.</p>\n<ul>\n<li><code>__checkGenres</code> - check contains seraching genre in movie genres. Input args: <code>searchGenres</code> - dict with searching genres, <code>columnGenres</code> - list genres of movies. Returns <code>bool</code>.</li>\n<li><code>checkWithSearchParametersFilms</code> - check if the given search parameters for movies are met. Input args: <code>row</code> - list with pair key, values. Returns <code>bool</code>.</li>\n<li><code>checkNullRow</code> - check if row is None. Input args: <code>row</code> - list with pair key, values. Returns <code>bool</code>.</li>\n</ul>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630797600529_111381754",
+      "id": "paragraph_1630797600529_111381754",
+      "dateCreated": "2021-09-05T02:20:00+0300",
+      "dateStarted": "2021-09-05T21:18:25+0300",
+      "dateFinished": "2021-09-05T21:18:25+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:346"
+    },
+    {
+      "text": "%pyspark\n\ndef __checkGenres(searchGenres, columnGenres):\n\n    if searchGenres is None:\n        if columnGenres is None:\n            return False\n        return True\n\n    if searchGenres and columnGenres:\n        for genre in searchGenres:\n            if genre in columnGenres:\n                return True\n    return False\n\n\ndef checkWithSearchParametersFilms(row):\n    \n    regularExpr, yearFrom, yearTo, genreSearch, _ = conditions\n    year, title, genres = row[1]\n    \n    if not year or not title or not genres:\n        return False\n    \n    if yearFrom and yearFrom > year:\n        return False\n    if yearTo and yearTo < year:\n        return False\n\n    if regularExpr:\n        if not bool(re.search(regularExpr, title)):\n            return False\n\n    return __checkGenres(genreSearch, genres)\n    \n\ndef checkNullRow(row):\n    \n    key, value = row\n    return key is not None\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:25+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630797610516_1916573681",
+      "id": "paragraph_1630797610516_1916573681",
+      "dateCreated": "2021-09-05T02:20:10+0300",
+      "dateStarted": "2021-09-05T21:18:25+0300",
+      "dateFinished": "2021-09-05T21:18:25+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:347"
+    },
+    {
+      "text": "%md\n\n### Functions for explode data\n\n* `explodeMovies` - explode data movies. Input args: `row` - list with input vals (key, movieData). Returns: `list`.\n* `explodeByGenre` - explode data for results print. Input args: `row` - - list with input vals (genre, movieData). Returns: `list`.",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:25+0300",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 14,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Functions for explode data</h3>\n<ul>\n<li><code>explodeMovies</code> - explode data movies. Input args: <code>row</code> - list with input vals (key, movieData). Returns: <code>list</code>.</li>\n<li><code>explodeByGenre</code> - explode data for results print. Input args: <code>row</code> - - list with input vals (genre, movieData). Returns: <code>list</code>.</li>\n</ul>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630799858323_764595731",
+      "id": "paragraph_1630799858323_764595731",
+      "dateCreated": "2021-09-05T02:57:38+0300",
+      "dateStarted": "2021-09-05T21:18:25+0300",
+      "dateFinished": "2021-09-05T21:18:25+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:348"
+    },
+    {
+      "title": "Functions for work with data",
+      "text": "%pyspark\n\ndef explodeMovies(row):\n\n    movie, rating = row[1]\n    year, title, genres = movie\n    conditionGenres = conditions[3]\n    explodedMovie = []\n    for genre in genres:\n        if conditionGenres:\n            if genre in conditionGenres:\n                explodedMovie.append([genre, [year, title, rating]])\n        else:\n            explodedMovie.append([genre, [year, title, rating]])\n    return explodedMovie\n    \n\ndef explodeByGenre(row):\n    \n    genre, movies = row\n    for movie in movies:\n        year, title, rating = movie\n        yield [genre, title, year, rating]",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:25+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "completionKey": "TAB",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "language": "python"
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630610645199_879708194",
+      "id": "paragraph_1630457064182_1501265358",
+      "dateCreated": "2021-09-02T22:24:05+0300",
+      "dateStarted": "2021-09-05T21:18:25+0300",
+      "dateFinished": "2021-09-05T21:18:25+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:349"
+    },
+    {
+      "title": "Work with data",
+      "text": "%pyspark\n\n# Normalization movies\nrddMoviesNormalized = movies.map(normalizeMovies) \\\n                      .filter(checkWithSearchParametersFilms)\n\n# Normalization ratings\nrddRatingsNormalized = ratings.map(normalizeRatings) \\\n                       .filter(checkNullRow) \\\n                       .groupByKey() \\\n                       .mapValues(lambda row: sum(row) / len(row))\n\n# Shaping results\nresult = rddMoviesNormalized.join(rddRatingsNormalized) \\\n            .flatMap(explodeMovies) \\\n            .groupByKey() \\\n            .mapValues(normalizeMoviesList) \\\n            .sortByKey() \\\n            .flatMap(explodeByGenre)",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:25+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "completionKey": "TAB",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "language": "python"
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://192.168.1.50:4040/jobs/job?id=13",
+              "$$hashKey": "object:5854"
+            },
+            {
+              "jobUrl": "http://192.168.1.50:4040/jobs/job?id=14",
+              "$$hashKey": "object:5855"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630610645199_1722364816",
+      "id": "paragraph_1630457081440_382923253",
+      "dateCreated": "2021-09-02T22:24:05+0300",
+      "dateStarted": "2021-09-05T21:18:25+0300",
+      "dateFinished": "2021-09-05T21:18:26+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:350"
+    },
+    {
+      "title": "Save results output file to hdfs",
+      "text": "%pyspark\n\nresult.saveAsTextFile('hdfs:///tmp/output')",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:26+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630801253177_1772730113",
+      "id": "paragraph_1630801253177_1772730113",
+      "dateCreated": "2021-09-05T03:20:53+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:351"
+    },
+    {
+      "title": "Save results output file to local file",
+      "text": "%pyspark\n\nresult.saveAsTextFile(\"file://\" + pathToNotebook + \"/tmp/result\")",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:20:08+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630801286206_914510872",
+      "id": "paragraph_1630801286206_914510872",
+      "dateCreated": "2021-09-05T03:21:26+0300",
+      "dateStarted": "2021-09-05T03:24:23+0300",
+      "dateFinished": "2021-09-05T03:24:24+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:352"
+    },
+    {
+      "title": "Print results in csv-like form",
+      "text": "%pyspark\n\nprint(\"genre,title,year,rating\")\nfor row in result.collect():\n    genre, title, year, rating = row\n    print('{0},\"{1}\",{2},{3}'.format(genre, title, year, round(rating, 1)))",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:26+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "completionKey": "TAB",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "language": "python"
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "title": true,
+        "results": {},
+        "enabled": false,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630610645200_2042839909",
+      "id": "paragraph_1630457091939_1454210198",
+      "dateCreated": "2021-09-02T22:24:05+0300",
+      "dateStarted": "2021-09-05T20:58:49+0300",
+      "dateFinished": "2021-09-05T20:58:49+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:353"
+    },
+    {
+      "title": "Print results in table-like form",
+      "text": "%pyspark\n\nprint(\"%table genre\\ttitle\\tyear\\trating\")\nfor row in result.collect():\n    genre, title, year, rating = row\n    print(\"{}\\t{}\\t{}\\t{}\".format(genre, title, year, round(rating, 1)))",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:26+0300",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "completionKey": "TAB",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "language": "python"
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 14,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "genre": "string",
+                      "title": "string",
+                      "year": "string",
+                      "rating": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "genre",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "title",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true,
+        "title": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "genre\ttitle\tyear\trating\nAction\tWhy Don't You Play In Hell? (Jigoku de naze warui)\t2013\t4.2\nAction\tHardware\t1990\t1.5\nAdventure\tHomeward Bound II: Lost in San Francisco\t1996\t3.6\nAdventure\tHomeward Bound: The Incredible Journey\t1993\t3.0\nChildren\tHomeward Bound II: Lost in San Francisco\t1996\t3.6\nChildren\tHomeward Bound: The Incredible Journey\t1993\t3.0\nComedy\tGreat Buck Howard, The\t2008\t3.5\nComedy\tBenchwarmers, The\t2006\t2.8\nComedy\tThat Awkward Moment\t2014\t2.6\nCrime\tAssassination of Jesse James by the Coward Robert Ford, The\t2007\t4.1\nDocumentary\tZeitgeist: Moving Forward\t2011\t5.0\nDocumentary\tInternet's Own Boy: The Story of Aaron Swartz, The\t2014\t4.5\nDocumentary\tHaunted World of Edward D. Wood Jr., The\t1996\t4.0\nDocumentary\tJon Stewart Has Left the Building\t2015\t3.5\nDrama\tWhy Don't You Play In Hell? (Jigoku de naze warui)\t2013\t4.2\nDrama\tAssassination of Jesse James by the Coward Robert Ford, The\t2007\t4.1\nDrama\tHowards End\t1992\t4.0\nDrama\tEdward Scissorhands\t1990\t3.7\nDrama\tPay It Forward\t2000\t3.4\nDrama\tHomeward Bound: The Incredible Journey\t1993\t3.0\nDrama\tBlack Book (Zwartboek)\t2006\t2.5\nDrama\tSpring Forward\t1999\t2.0\nFantasy\tEdward Scissorhands\t1990\t3.7\nHorror\tHardware\t1990\t1.5\nRomance\tEdward Scissorhands\t1990\t3.7\nRomance\tThat Awkward Moment\t2014\t2.6\nSci-Fi\tHardware\t1990\t1.5\nThriller\tBlack Book (Zwartboek)\t2006\t2.5\nWar\tBlack Book (Zwartboek)\t2006\t2.5\nWestern\tAssassination of Jesse James by the Coward Robert Ford, The\t2007\t4.1\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://192.168.1.50:4040/jobs/job?id=15",
+              "$$hashKey": "object:5975"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630610645200_2122237629",
+      "id": "paragraph_1630519075438_978442147",
+      "dateCreated": "2021-09-02T22:24:05+0300",
+      "dateStarted": "2021-09-05T21:18:26+0300",
+      "dateFinished": "2021-09-05T21:18:26+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:354"
+    },
+    {
+      "text": "%pyspark\n",
+      "user": "anonymous",
+      "dateUpdated": "2021-09-05T21:18:26+0300",
+      "progress": 0,
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1630801798334_1864323812",
+      "id": "paragraph_1630801798334_1864323812",
+      "dateCreated": "2021-09-05T03:29:58+0300",
+      "status": "FINISHED",
+      "$$hashKey": "object:355",
+      "dateFinished": "2021-09-05T21:18:26+0300",
+      "dateStarted": "2021-09-05T21:18:26+0300",
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      }
+    }
+  ],
+  "name": "get-movies",
+  "id": "2GFNG9V95",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/get-movies"
+}
